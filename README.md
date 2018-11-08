@@ -11,6 +11,8 @@ Starcraft2 peli pitää olla asennettu, luo Starcraft2 juuri kansioon kansio "Ma
 
 Lataa kyseiset mapi(t) ja siirrä tiedosto kyseiseen Maps kansioon 
 
+// lataa mapit suoraan omaan repositorioon ja linkit readme:hin
+
 Asenna https://github.com/Dentosal/python-sc2
 
 ```

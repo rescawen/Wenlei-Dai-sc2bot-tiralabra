@@ -1,7 +1,16 @@
-# Wenlei-Dai-sc2bot-tiralabra
+# Sc2bot Tiralabra
 
-## 2018 syksyn toisen periodin tira harjoitustyö
+[2018 syksyn toisen periodin tira harjoitustyö](https://github.com/tiralabra/2018-2)
 
+Kyseinen kieli projektille on python. 
+
+## Dokumentaatio
+
+#### [Vaatimusmäärittely]
+
+### Viikkoraportit
+
+* [Viikkoraportti #1]
 
 ### Asentaminen
 

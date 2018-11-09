@@ -6,11 +6,12 @@ Kyseinen kieli projektille on python.
 
 ## Dokumentaatio
 
-#### [Vaatimusmäärittely]
+#### [Vaatimusmäärittely](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Vaatimusm%C3%A4%C3%A4rittely.md)
 
 ### Viikkoraportit
 
-* [Viikkoraportti #1]
+* [Viikkoraportti #1](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti1.md)
+* [Viikkoraportti #2](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti2.md)
 
 ### Asentaminen
 

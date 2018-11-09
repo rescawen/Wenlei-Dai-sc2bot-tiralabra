@@ -11,7 +11,7 @@
 ### What will I do next?
 
 I started to get the basic environment set up for the project. It includes getting the python, pip and 
-the IDE(visual studio) set up for the work. The guide online was given to be straight forward, but in
+the IDE(visual studio) set up for the work on windows. The guide online was given to be straight forward, but in
 reality it was not that simple. 
 
 For example one needs to be at a specific folder in pythonXX/scripts to install the package. Then when 
@@ -35,7 +35,7 @@ There is also possibility to run game at incredibly fast speed which I did not t
 the normal one. This is an incredibly useful feature because you can generate the outcome of a game pretty fast and see 
 if your intention in the code translates to reality very quickly. 
 
-
+When one is doing simple bots, even when you have already implemented quite some code. It is still feels very "stupid" for humans, where if something is not taken into account in its strict logic constraints it will fall apart completely. 
 
 Pylint(default python linting for VSC) is giving me errors in very random errors that I think are related specifics for 
 this API and also not linting certain typos that I make. 

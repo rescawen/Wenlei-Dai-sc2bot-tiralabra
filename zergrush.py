@@ -104,7 +104,7 @@ def main():
     sc2.run_game(sc2.maps.get("AcidPlantLE"), [
         Bot(Race.Zerg, ZergRushBot()),
         Computer(Race.Terran, Difficulty.Medium)
-    ], realtime=True)
+    ], realtime=False)
 
 if __name__ == '__main__':
     main()

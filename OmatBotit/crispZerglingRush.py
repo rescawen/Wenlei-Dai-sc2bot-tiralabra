@@ -5,6 +5,8 @@ from sc2 import Race, Difficulty
 from sc2.constants import *
 from sc2.player import Bot, Computer
 
+from examples.terran.proxy_rax import ProxyRaxBot
+
 class ZergRushBot(sc2.BotAI):
     def __init__(self):
         self.drone_counter_prior = 0
@@ -103,7 +105,7 @@ class ZergRushBot(sc2.BotAI):
 def main():
     sc2.run_game(sc2.maps.get("AcidPlantLE"), [
         Bot(Race.Zerg, ZergRushBot()),
-        Computer(Race.Terran, Difficulty.CheatInsane)
+        Bot(Race.Terran, ProxyRaxBot())
     ], realtime=False)
 
 if __name__ == '__main__':

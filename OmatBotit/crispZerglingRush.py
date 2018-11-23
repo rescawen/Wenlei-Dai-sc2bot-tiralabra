@@ -105,8 +105,8 @@ class ZergRushBot(sc2.BotAI):
 def main():
     sc2.run_game(sc2.maps.get("AcidPlantLE"), [
         Bot(Race.Zerg, ZergRushBot()),
-        Bot(Race.Terran, ProxyRaxBot())
-    ], realtime=False)
+        Computer(Race.Terran, Difficulty.Medium)
+    ], realtime=False, save_replay_as="C:/Users/resca/Documents/GitHub/Wenlei-Dai-sc2bot-tiralabra/Replays/example.SC2Replay")
 
 if __name__ == '__main__':
     main()

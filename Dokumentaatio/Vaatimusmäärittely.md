@@ -16,7 +16,7 @@ Deep learning is the pipedream of this project, it was explained in the tutorial
 
 Due to the nature of this project, I won't be using any data structures or algorithms for anything very specific like in the exercises of [algorithm in problem solving](https://www.cses.fi/alon19/list). However from a high level strategic point of view it is similar to [minimax algorithm](https://materiaalit.github.io/intro-to-ai-18/part2/), where the bot is trying to cut off as many game tree possibilities to make it so that it's own logic will not be broken by entering an unknown situation. 
 
-As of this time I am unsure whether my own code will affect time and space complexity. This is because I am using a library that is already created and my guess is that the time and space complexity are bound to how 
+As of this time I am unsure whether my own code will affect time and space complexity of the program. This is because I am using a library that is already created and my guess is that the time and space complexity are bound to the limitations that library has set. At the end of day a logic based bot should not be too complicated for the amount of time I have to build it. Given that there might not be that much to analyse. To summarize the code that I write will have minimal affect on the time and space complexity of the bot.
 
 
 

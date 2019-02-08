@@ -18,6 +18,8 @@ Ohjelmointi Kieli: Python.
 * [Viikkoraportti #5](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti5.md)
 * [Viikkoraportti #6](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti6.md)
 -->
+* [Viikkoraportti #3](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti3new.md)
+* [Viikkoraportti #4](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Viikkoraportti4new.md)
 ### Asentaminen
 
 Seuraava osa on kopioitu [Overmind Challenge Virallinen GitLab](https://gitlab.com/overmind-challenge/overmind-challenge-template)

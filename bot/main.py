@@ -13,10 +13,9 @@ from sc2.position import Point2
 from sc2.unit import Unit
 from sc2.game_info import GameInfo
 
-# from asdasd import find_target, battle_target, calculate_enemy_natural, calculate_own_natural
-
-from bot.economyOpener import economyOpenerBuild
-
+from bot.openingBuildOrder import economyOpenerBuild, pressureOpenerBuild
+from bot.scouting import scouting
+from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
 
 
 class MyBot(sc2.BotAI):
@@ -54,36 +53,7 @@ class MyBot(sc2.BotAI):
         else:
             return self.enemy_start_locations[0]
 
-    def battle_target(self):
-        if self.known_enemy_units.exists:
-            return random.choice(self.known_enemy_units).position
-    
-    # Calculating the location of the immediate expansion base called the natural expansion, this information is required for scouting patterns
-    
-    def calculate_enemy_natural(self) -> Point2:
-        enemy_base = self.enemy_start_locations[0]
-        best = None
-        distance = math.inf
-        for expansion in self.expansion_locations:
-            temp = expansion.distance2_to(enemy_base)
-            if temp < distance and temp > 0:
-                distance = temp
-                best = expansion
-        return best
-
-    def calculate_own_natural(self) -> Point2:
-        own_base = self.start_location
-        best = None
-        distance = math.inf
-        for expansion in self.expansion_locations:
-            temp = expansion.distance2_to(own_base)
-            if temp < distance and temp > 0:
-                distance = temp
-                best = expansion
-        return best
-
     async def on_step(self, iteration):
-
 
         if iteration == 0:
             await self.chat_send(f"Name: {self.NAME}")  
@@ -103,7 +73,6 @@ class MyBot(sc2.BotAI):
         await self.naturalExpand(totalBaseCount)
         await self.thirdExpand(totalBaseCount)
         await self.lategameExpand(totalBaseCount)
-        
         await self.workerDistribution(totalBaseCount)
         await self.continueUpgradingArmy()
         await self.returnWorkerstoMine()
@@ -121,48 +90,47 @@ class MyBot(sc2.BotAI):
             await self.earlyGameDefense()
 
         ################### pressure
-        if self.enemy_race == Race.Zerg or Race.Protoss:
-            if self.time < 180:
-                await self.pressureOpenerBuild(larvae, hatchery, extractor)
-                await self.trainZerglings(larvae)
-                await self.earlyGameBattle()
+        # if self.enemy_race == Race.Zerg or Race.Protoss:
+        #     if self.time < 180:
+        #         await self.pressureOpenerBuild(larvae, hatchery, extractor)
+        #         await self.trainZerglings(larvae)
+        #         await self.earlyGameBattle()
             
-            if self.time > 180:
-                await self.postPressureMacro(larvae, hatchery)
+        #     if self.time > 180:
+        #         await self.postPressureMacro(larvae, hatchery)
 
-            if self.time > 400:
-                await self.trainMutalisks(larvae)
-                await self.trainZerglings(larvae)
-                await self.trainOverlordsinBatch(larvae)
-                await self.midGamePush()
+        #     if self.time > 400:
+        #         await self.trainMutalisks(larvae)
+        #         await self.trainZerglings(larvae)
+        #         await self.trainOverlordsinBatch(larvae)
+        #         await self.midGamePush()
 
         ######## macro
 
-        if self.enemy_race == Race.Terran:
-            if self.time < 185:
-                await economyOpenerBuild(larvae, hatchery, extractor, totalBaseCount)
-                # await self.trainZerglings(larvae)
-                # await self.earlyGameBattle()
-            
-            if self.time > 185:
-                await self.postPressureMacro(larvae, hatchery)
-                await self.trainOverlordsinBatch(larvae)
-
-            if self.time > 300:
-                await self.trainMutalisks(larvae)
-                await self.trainZerglings(larvae)
-                await self.midGamePush()
+        # if self.enemy_race == Race.Terran:
+        if self.time < 185:
+            await economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount)
+            # await self.trainZerglings(larvae)
+            # await self.earlyGameBattle()
         
-            
+        if self.time > 185:
+            await self.postPressureMacro(larvae, hatchery)
+            await self.trainOverlordsinBatch(larvae)
+
+        if self.time > 300:
+            await self.trainMutalisks(larvae)
+            await self.trainZerglings(larvae)
+            await self.midGamePush()
+        
         
     # Scouting for overlords in initial state of the game is only required do once, hence it is executed immediately when the unit is created
 
     async def on_unit_created(self, unit:Unit):
-        enemy_natural = self.calculate_enemy_natural()
-        own_natural = self.calculate_own_natural()
+        enemy_natural = calculate_enemy_natural(self)
+        own_natural = calculate_own_natural(self)
         if unit.type_id == OVERLORD:
             self.overlord_scout_order_count += 1
-            await self.scouting(unit, enemy_natural, own_natural)
+            await scouting(self, unit, enemy_natural, own_natural)
 
     # When a new base is created we calculate the theoretical maximum number of workers we want to have in each of the bases
     
@@ -204,51 +172,12 @@ class MyBot(sc2.BotAI):
                 await self.do(spire.first(RESEARCH_ZERGFLYERATTACKLEVEL1))
                 self.airUpgradeStarted = True
 
-    # The scouting algorithm 
-
     async def returnWorkerstoMine(self):
         actions = []
         for idle_worker in self.workers.idle:
             mf = self.state.mineral_field.closest_to(idle_worker)
             actions.append(idle_worker.gather(mf))
         await self.do_actions(actions)
-
-    async def scouting(self, unit, enemy_natural, own_natural):
-        
-        # if self.overlord_scout_order_count == 1:
-        #         await self.do(unit.move(enemy_natural))
-        if self.overlord_scout_order_count == 1:
-            positions = []
-            for expansion in self.expansion_locations:
-                if expansion == self.start_location or expansion == own_natural:
-                    continue
-                if expansion.distance_to(self.start_location) < 50 or expansion.distance_to(own_natural) < 50:
-                    positions.append(expansion)
-            for position in positions:
-                await self.do(unit.move(position, True))
-        
-        if self.overlord_scout_order_count == 2:
-            positions = []
-            for expansion in self.expansion_locations:
-                if expansion == self.start_location or expansion == own_natural:
-                    continue
-                if expansion.distance_to(self.start_location) < 60 or expansion.distance_to(own_natural) < 60:
-                    positions.append(expansion)
-            for position in positions:
-                await self.do(unit.move(position, True))
-
-        if self.overlord_scout_order_count == 3:
-                await self.do(unit.move(own_natural))
-        
-        if self.overlord_scout_order_count == 4:
-            positions = []
-            for expansion in self.expansion_locations:
-                if expansion == self.start_location or expansion == own_natural:
-                    continue
-                if expansion.distance_to(self.start_location) < 70 or expansion.distance_to(own_natural) < 70:
-                    positions.append(expansion)
-            for position in positions:
-                await self.do(unit.move(position, True))
 
     # Injecting is the zerg race way of creating extra larvas which all units morphe from. This is basically getting the most amount of production capacity possible.
 
@@ -273,15 +202,6 @@ class MyBot(sc2.BotAI):
         if self.units(OVERLORD).amount < 23 and self.supply_left < 12 and self.already_pending(OVERLORD) < 3:
             if self.can_afford(OVERLORD) and larvae.exists:
                 await self.do(larvae.random.train(OVERLORD))
-        
-        # supplyNeeded = 200 - ((self.units(OVERLORD).amount * 8) + 18)
-
-        # supplyPending = 0
-
-        # while supplyNeeded >= supplyPending:
-        #     if self.can_afford(OVERLORD) and larvae.exists:
-        #         supplyPending += 8
-        #         await self.do(larvae.random.train(OVERLORD))
         
     async def trainZerglings(self, larvae):
         if self.units(SPAWNINGPOOL).ready.exists and self.mboost_started == True:
@@ -309,9 +229,6 @@ class MyBot(sc2.BotAI):
                     actions.append(unit.attack(random.choice(self.known_enemy_units).position))
                 await self.do_actions(actions)
 
-    # self.known_enemy_units.filter(lambda u: not u.is_flying)
-    # if not self.known_enemy_units.filter(lambda u: u.is_flying):
-
     async def earlyGameBattle(self):
         actions = []
         forces = self.units(ZERGLING) 
@@ -319,16 +236,7 @@ class MyBot(sc2.BotAI):
             if self.known_enemy_units.filter(lambda u: not u.is_flying).exists:
                 for unit in forces:
                     actions.append(unit.attack(random.choice(self.known_enemy_units.filter(lambda u: not u.is_flying)).position))
-                await self.do_actions(actions)
-
-    # POTENTIAL TARGETFIRE WITH MUTAS, list of priority for the mutas?, separate for loops for zerglings and mutas, because zerglings cannot attack air
-    # async def midLateGameBattle(self): 
-    #     actions = []
-    #     forces = self.units(ZERGLING) | self.units(MUTALISK)
-    #     if self.units(MUTALISK).amount > 23:
-    #         for unit in forces.idle:
-    #             actions.append(unit.attack(self.find_target(self.state)))
-    #         await self.do_actions(actions)    
+                await self.do_actions(actions) 
 
     async def midGamePush(self):
         actions = []
@@ -412,115 +320,3 @@ class MyBot(sc2.BotAI):
     async def workerDistribution(self, totalBaseCount):
         if totalBaseCount > 1:
             await self.distribute_workers()
-
-
-    async def pressureOpenerBuild(self, larvae, hatchery, extractor):
-        if self.drone_counter_prior < 1:
-            if self.can_afford(DRONE):
-                self.drone_counter_prior += 1
-                await self.do(larvae.random.train(DRONE))
-
-        if not self.extractor_started:
-            if self.can_afford(EXTRACTOR):
-                drone = self.workers.random
-                target = self.state.vespene_geyser.closest_to(drone.position)
-                err = await self.do(drone.build(EXTRACTOR, target))
-                if not err:
-                    self.extractor_started = True
-
-        elif not self.spawning_pool_started:
-            if self.can_afford(SPAWNINGPOOL):
-                for d in range(4, 15):
-                    pos = hatchery.position.to2.towards(self.game_info.map_center, d)
-                    if await self.can_place(SPAWNINGPOOL, pos):
-                        drone = self.workers.closest_to(pos)
-                        err = await self.do(drone.build(SPAWNINGPOOL, pos))
-                        if not err:
-                            self.spawning_pool_started = True
-                            break
-
-        elif not self.queeen_started and self.units(SPAWNINGPOOL).ready.exists:
-            if self.can_afford(QUEEN):
-                r = await self.do(hatchery.train(QUEEN))
-                if not r:
-                    self.queeen_started = True
-        
-        if self.drone_counter_after < 3 and extractor.exists:
-            if self.can_afford(DRONE):
-                self.drone_counter_after += 1
-                await self.do(larvae.random.train(DRONE))
-
-        if self.units(EXTRACTOR).ready.exists and not self.moved_workers_to_gas:
-            self.moved_workers_to_gas = True
-            extractor = self.units(EXTRACTOR).first
-            for drone in self.workers.random_group_of(3):
-                await self.do(drone.gather(extractor))
-
-        if self.vespene >= 100:
-            sp = self.units(SPAWNINGPOOL).ready
-            if sp.exists and self.minerals >= 100 and not self.mboost_started:
-                await self.do(sp.first(RESEARCH_ZERGLINGMETABOLICBOOST))
-                self.mboost_started = True
-
-            if self.moved_workers_from_gas == 0:
-                self.moved_workers_from_gas += 1
-                for drone in self.workers:
-                    m = self.state.mineral_field.closer_than(10, drone.position)
-                    await self.do(drone.gather(m.random, queue=True)) ## for loop here until we have target drones all in minerals
-
-        if self.mboost_started == True and self.moved_workers_from_gas == 1 and self.vespene > 7:
-            self.moved_workers_from_gas += 1
-            for drone in self.workers:
-                m = self.state.mineral_field.closer_than(10, drone.position)
-                await self.do(drone.gather(m.random, queue=True))
-
-    # async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount):
-
-    #     if self.drone_counter_prior < 2:
-    #         if self.can_afford(DRONE) and larvae.exists:
-    #             self.drone_counter_prior += 1
-    #             await self.do(larvae.random.train(DRONE))
-        
-    #     if self.drone_counter_after < 5:
-    #         if self.can_afford(DRONE) and larvae.exists:
-    #             self.drone_counter_prior += 1
-    #             await self.do(larvae.random.train(DRONE))
-
-    #     if self.minerals > 300 and totalBaseCount < 2:
-    #         await self.expand_now()
-
-    #     if self.minerals > 300 and totalBaseCount < 3:
-    #         await self.expand_now()
-        
-    #     if totalBaseCount == 3:
-    #         if not self.spawning_pool_started:
-    #             if self.can_afford(SPAWNINGPOOL):
-    #                 for d in range(4, 15):
-    #                     pos = hatchery.position.to2.towards(self.game_info.map_center, d)
-    #                     if await self.can_place(SPAWNINGPOOL, pos):
-    #                         drone = self.workers.closest_to(pos)
-    #                         err = await self.do(drone.build(SPAWNINGPOOL, pos))
-    #                         if not err:
-    #                             self.spawning_pool_started = True
-    #                             break
-
-    #         elif not self.extractor_started:
-    #             if self.can_afford(EXTRACTOR):
-    #                 drone = self.workers.random
-    #                 target = self.state.vespene_geyser.closest_to(drone.position)
-    #                 err = await self.do(drone.build(EXTRACTOR, target))
-    #                 if not err:
-    #                     self.extractor_started = True
-        
-    #     if self.units(EXTRACTOR).ready.exists and not self.moved_workers_to_gas:
-    #         self.moved_workers_to_gas = True
-    #         extractor = self.units(EXTRACTOR).first
-    #         for drone in self.workers.random_group_of(3):
-    #             await self.do(drone.gather(extractor))
-
-    #     if self.vespene >= 112:
-    #         sp = self.units(SPAWNINGPOOL).ready
-    #         if sp.exists and self.minerals >= 100 and not self.mboost_started:
-    #             await self.do(sp.first(RESEARCH_ZERGLINGMETABOLICBOOST))
-    #             self.mboost_started = True
-

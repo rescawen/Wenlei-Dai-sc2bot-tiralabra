@@ -1,14 +1,17 @@
-def find_target(self, state):
-    if self.known_enemy_units.filter(lambda u: not u.is_flying).exists:
-        return random.choice(self.known_enemy_units.filter(lambda u: not u.is_flying))
-    elif len(self.known_enemy_structures) > 0:
-        return self.known_enemy_structures
-    else:
-        return self.enemy_start_locations[0]
+import json
+from pathlib import Path
 
-def battle_target(self):
-    if self.known_enemy_units.exists:
-        return random.choice(self.known_enemy_units).position
+import random
+import time
+import math
+
+import sc2
+from sc2 import Race, Difficulty
+from sc2.constants import *
+from sc2.player import Bot, Computer
+from sc2.position import Point2
+from sc2.unit import Unit
+from sc2.game_info import GameInfo
 
 # Calculating the location of the immediate expansion base called the natural expansion, this information is required for scouting patterns
 

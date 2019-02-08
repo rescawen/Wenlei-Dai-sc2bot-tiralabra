@@ -24,6 +24,10 @@ Ohjelmointi Kieli: Python.
 
 Seuraava osa on kopioitu [Overmind Challenge Virallinen GitLab](https://gitlab.com/overmind-challenge/overmind-challenge-template)
 
+The video in the following link has a comprehensive guide to installing everything on your computer:
+
+[Python Programming: Python AI in StarCraft II tutorial part 1](https://pythonprogramming.net/starcraft-ii-ai-python-sc2-tutorial/)
+
 ## Gearing up for the battle
 
 Note: for development you will need Python version 3.6 or higher.

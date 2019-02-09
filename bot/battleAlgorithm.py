@@ -13,6 +13,8 @@ from sc2.position import Point2
 from sc2.unit import Unit
 from sc2.game_info import GameInfo
 
+# Find target is used to determine in which order should the army engage in battle
+
 def find_target(self, state):
     if self.known_enemy_units.filter(lambda u: not u.is_flying).exists:
         return random.choice(self.known_enemy_units.filter(lambda u: not u.is_flying))

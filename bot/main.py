@@ -16,6 +16,7 @@ from sc2.game_info import GameInfo
 from bot.openingBuildOrder import economyOpenerBuild, pressureOpenerBuild
 from bot.scouting import scouting
 from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
+from bot.battleAlgorithm import find_target
 
 
 class MyBot(sc2.BotAI):
@@ -41,17 +42,6 @@ class MyBot(sc2.BotAI):
         self.groundUpgradeStarted = False
         self.airUpgradeStarted = False
         self.naturalBaseTag = 0
-        
-        
-    # Find target is used to determine in which order should the army engage in battle
-
-    def find_target(self, state):
-        if self.known_enemy_units.filter(lambda u: not u.is_flying).exists:
-            return random.choice(self.known_enemy_units.filter(lambda u: not u.is_flying))
-        elif len(self.known_enemy_structures) > 0:
-            return self.known_enemy_structures
-        else:
-            return self.enemy_start_locations[0]
 
     async def on_step(self, iteration):
 
@@ -157,8 +147,6 @@ class MyBot(sc2.BotAI):
                 self.workerCap =  totalBaseCount * 21
             else:
                 self.workerCap = 66
-
-        print(self.workerCap)
         
         if unit.type_id == EVOLUTIONCHAMBER:
             evochamber = self.units(EVOLUTIONCHAMBER).ready
@@ -216,7 +204,7 @@ class MyBot(sc2.BotAI):
         if self.units(ZERGLING).amount > 16: 
 
             for zl in self.units(ZERGLING).idle:
-                    await self.do(zl.attack(self.find_target(self.state)))
+                    await self.do(zl.attack(find_target(self, self.state)))
     
     # wait for units to pull up before before sending them in, this current thing is good in early game vs proxy rax for example but in later stage it will send units in 1 by 1
     
@@ -243,7 +231,7 @@ class MyBot(sc2.BotAI):
         forces = self.units(ZERGLING) | self.units(MUTALISK)
         if self.units(MUTALISK).amount > 23:
             for unit in forces.idle:
-                actions.append(unit.attack(self.find_target(self.state)))
+                actions.append(unit.attack(find_target(self, self.state)))
             await self.do_actions(actions)    
 
     async def naturalExpand(self, totalBaseCount):

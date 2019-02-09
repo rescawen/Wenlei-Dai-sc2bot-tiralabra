@@ -1,18 +1,5 @@
-import json
-from pathlib import Path
-
-import random
-import time
-import math
-
 import sc2
-from sc2 import Race, Difficulty
 from sc2.constants import *
-from sc2.player import Bot, Computer
-from sc2.position import Point2
-from sc2.unit import Unit
-from sc2.game_info import GameInfo
-
 
 async def scouting(self, unit, enemy_natural, own_natural):
     

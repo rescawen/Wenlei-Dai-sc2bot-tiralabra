@@ -3,20 +3,22 @@ from pathlib import Path
 
 import random
 import time
-import math
 
 import sc2
-from sc2 import Race, Difficulty
+from sc2 import Race
 from sc2.constants import *
-from sc2.player import Bot, Computer
-from sc2.position import Point2
 from sc2.unit import Unit
-from sc2.game_info import GameInfo
 
 from bot.openingBuildOrder import economyOpenerBuild, pressureOpenerBuild
-from bot.scouting import scouting
+from bot.scoutingAlgorithm import scouting
 from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
 from bot.battleAlgorithm import find_target
+from bot.workerManagement import workerDistribution, returnWorkerstoMine
+from bot.unitProduction import trainOverlords, trainOverlordsinBatch, trainMutalisks, trainZerglings
+from bot.expansionManagement import naturalExpand, thirdExpand, lategameExpand
+from bot.structureProduction import buildSpire, buildEvochamber
+from bot.queenManagement import injecting
+from bot.upgradeManagement import continueUpgradingArmy
 
 
 class MyBot(sc2.BotAI):
@@ -24,6 +26,8 @@ class MyBot(sc2.BotAI):
         NAME = json.load(f)["name"]
 
     def __init__(self):
+
+        # Own variables for game state, used to keep track of important information or triggers for certain functions
 
         self.drone_counter_prior = 0
         self.drone_counter_after = 0
@@ -43,6 +47,8 @@ class MyBot(sc2.BotAI):
         self.airUpgradeStarted = False
         self.naturalBaseTag = 0
 
+    # Everything happens inside the on_step function
+
     async def on_step(self, iteration):
 
         if iteration == 0:
@@ -53,41 +59,40 @@ class MyBot(sc2.BotAI):
         
         hatchery = self.townhalls.first #fix this from crashing the game
         larvae = self.units(LARVA)
-        # spawningpool = self.units(SPAWNINGPOOL).ready
         extractor = self.units(EXTRACTOR).ready
         totalBaseCount = self.townhalls.amount
 
-        await self.on_unit_created(Unit)
-        await self.injecting(hatchery)
-        await self.trainOverlords(larvae)
-        await self.naturalExpand(totalBaseCount)
-        await self.thirdExpand(totalBaseCount)
-        await self.lategameExpand(totalBaseCount)
-        await self.workerDistribution(totalBaseCount)
-        await self.continueUpgradingArmy()
-        await self.returnWorkerstoMine()
-
+        await injecting(self, hatchery)
+        await trainOverlords(self, larvae)
+        await naturalExpand(self, totalBaseCount)
+        await thirdExpand(self, totalBaseCount)
+        await lategameExpand(self, totalBaseCount)
+        await continueUpgradingArmy(self)
+        await returnWorkerstoMine(self)
+        await workerDistribution(self, totalBaseCount)
 
         # await self.speedFinishedPush()
 
         # if self.evoChamberStarted == False:
-        #     await self.buildEvochamber(totalBaseCount)
+        #     await buildEvochamber(self, totalBaseCount)
 
         if self.spireStarted == False:
-            await self.buildSpire()
+            await buildSpire(self)
         
         if self.time < 150:
             await self.earlyGameDefense()
 
-        ################### pressure
-        # if self.enemy_race == Race.Zerg or Race.Protoss:
+        # pressureOpenerBuild
+
+        # if self.enemy_race == Race.Zerg or Race.Protoss or Race.Terran: just a reminder of how to pick opener based on opponents race
+
         #     if self.time < 180:
         #         await self.pressureOpenerBuild(larvae, hatchery, extractor)
         #         await self.trainZerglings(larvae)
         #         await self.earlyGameBattle()
-            
+    
         #     if self.time > 180:
-        #         await self.postPressureMacro(larvae, hatchery)
+        #         await self.midGameMacro(larvae, hatchery)
 
         #     if self.time > 400:
         #         await self.trainMutalisks(larvae)
@@ -95,21 +100,18 @@ class MyBot(sc2.BotAI):
         #         await self.trainOverlordsinBatch(larvae)
         #         await self.midGamePush()
 
-        ######## macro
-
-        # if self.enemy_race == Race.Terran:
+        # economyOpenerBuild 
+        
         if self.time < 185:
             await economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount)
-            # await self.trainZerglings(larvae)
-            # await self.earlyGameBattle()
-        
+
         if self.time > 185:
-            await self.postPressureMacro(larvae, hatchery)
-            await self.trainOverlordsinBatch(larvae)
+            await self.midGameMacro(larvae, hatchery)
+            await trainOverlordsinBatch(self, larvae)
 
         if self.time > 300:
-            await self.trainMutalisks(larvae)
-            await self.trainZerglings(larvae)
+            await trainMutalisks(self, larvae)
+            await trainZerglings(self, larvae)
             await self.midGamePush()
         
         
@@ -160,46 +162,6 @@ class MyBot(sc2.BotAI):
                 await self.do(spire.first(RESEARCH_ZERGFLYERATTACKLEVEL1))
                 self.airUpgradeStarted = True
 
-    async def returnWorkerstoMine(self):
-        actions = []
-        for idle_worker in self.workers.idle:
-            mf = self.state.mineral_field.closest_to(idle_worker)
-            actions.append(idle_worker.gather(mf))
-        await self.do_actions(actions)
-
-    # Injecting is the zerg race way of creating extra larvas which all units morphe from. This is basically getting the most amount of production capacity possible.
-
-    async def injecting(self, hatchery):
-        for queen in self.units(QUEEN).idle:
-            abilities = await self.get_available_abilities(queen)
-            if AbilityId.EFFECT_INJECTLARVA in abilities:
-                await self.do(queen(EFFECT_INJECTLARVA, hatchery))
-
-    # In RTS games all units take up supply, which is a sort of antiresource. The maximum is 200 and each overlord provides 8. 
-    # One needs to produce them at a rate depending on ones production capacity until you hit the maximum
-    # Theoretically you might want a little more than the bare minimum because sometimes they die in battle in later stages 
-    # of the game and it is not good to be supply blocked. 
-
-    async def trainOverlords(self, larvae):
-        if self.supply_left < 2 and not self.already_pending(OVERLORD):
-            if self.can_afford(OVERLORD) and larvae.exists:
-                await self.do(larvae.random.train(OVERLORD))
-
-    async def trainOverlordsinBatch(self, larvae):
-
-        if self.units(OVERLORD).amount < 23 and self.supply_left < 12 and self.already_pending(OVERLORD) < 3:
-            if self.can_afford(OVERLORD) and larvae.exists:
-                await self.do(larvae.random.train(OVERLORD))
-        
-    async def trainZerglings(self, larvae):
-        if self.units(SPAWNINGPOOL).ready.exists and self.mboost_started == True:
-            if larvae.exists and self.can_afford(ZERGLING):
-                await self.do(larvae.random.train(ZERGLING))
-
-    async def trainMutalisks(self, larvae):
-        if larvae.exists and self.can_afford(MUTALISK):
-                await self.do(larvae.random.train(MUTALISK))
-
     async def speedFinishedPush(self):
         if self.units(ZERGLING).amount > 16: 
 
@@ -234,58 +196,7 @@ class MyBot(sc2.BotAI):
                 actions.append(unit.attack(find_target(self, self.state)))
             await self.do_actions(actions)    
 
-    async def naturalExpand(self, totalBaseCount):
-        if self.minerals > 350 and totalBaseCount < 2:
-            await self.expand_now()
-
-    async def thirdExpand(self, totalBaseCount):
-        if self.minerals > 350 and totalBaseCount < 3 and self.units(DRONE).amount > 25 and self.already_pending(HATCHERY) == False:
-            await self.expand_now()
-
-    async def lategameExpand(self, totalBaseCount):
-
-        pressure = 700
-        economy = 500
-
-        if self.minerals > economy and totalBaseCount < 9 and self.already_pending(HATCHERY) == False and self.units(DRONE).amount > 60:
-            await self.expand_now()
-
-    async def buildSpire(self):
-        mainBase = self.units(LAIR).ready
-        if mainBase.exists:
-            if not (self.units(SPIRE).exists or self.already_pending(SPIRE)):
-                if self.can_afford(SPIRE):
-                    await self.build(SPIRE, near=mainBase.first)
-                    self.spireStarted == True
-    
-    async def buildEvochamber(self, totalBaseCount):
-        if self.units(LAIR).exists:
-            mainBase = self.units(LAIR).ready
-        else:
-            mainBase = self.units(HATCHERY).ready
-         # sometimes mainBase is lair and sometimes hatchery causing things to break
-        if totalBaseCount > 2:
-            if not (self.units(EVOLUTIONCHAMBER).exists or self.already_pending(EVOLUTIONCHAMBER)):
-                if self.can_afford(EVOLUTIONCHAMBER):
-                    await self.build(EVOLUTIONCHAMBER, near=mainBase.first)
-                    self.evoChamberStarted == True
-
-    async def continueUpgradingArmy(self):
-
-        # start level1 upgrades if cannot afford immediately after evo chamber is finished
-
-        if ZERGMELEEWEAPONSLEVEL1 in self.state.upgrades and self.already_pending_upgrade(ZERGMELEEWEAPONSLEVEL2) == False:
-            evochamber = self.units(EVOLUTIONCHAMBER).ready
-            if self.can_afford(RESEARCH_ZERGMELEEWEAPONSLEVEL2):
-                await self.do(evochamber.first(RESEARCH_ZERGMELEEWEAPONSLEVEL2))
-
-        if ZERGFLYERWEAPONSLEVEL1 in self.state.upgrades and self.already_pending_upgrade(ZERGFLYERWEAPONSLEVEL2) == False:
-            spire = self.units(SPIRE).ready
-            if self.can_afford(RESEARCH_ZERGFLYERATTACKLEVEL2):
-                await self.do(spire.first(RESEARCH_ZERGFLYERATTACKLEVEL2))
-                
-
-    async def postPressureMacro(self, larvae, hatchery):
+    async def midGameMacro(self, larvae, hatchery):
         actions = []
         
         if larvae.exists and self.can_afford(DRONE) and (self.units(DRONE).amount + self.already_pending(DRONE)) < self.workerCap:
@@ -304,7 +215,3 @@ class MyBot(sc2.BotAI):
                     actions.append(mainBase.build(LAIR))
 
         await self.do_actions(actions)
-
-    async def workerDistribution(self, totalBaseCount):
-        if totalBaseCount > 1:
-            await self.distribute_workers()

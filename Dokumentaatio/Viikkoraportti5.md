@@ -10,4 +10,7 @@
 
 ### What will I do next?
 
-Most disappointing week so far, pretty much didn't get anything done. Trying to focus on week 4 objectives. Realistically I want to look forward to getting a more work done on the 51th week which is the one from 17-21.12. I am still very motivated to learn about this topic and I need to be prepared for my bachelor thesis next spring. 
+This has been one of the busiest weeks so far. Right now my operating systems last miniexam ends on the 27.2 and this course final deadline is on 8th of March. Due to this schedule it is logical to prioritize on getting through OS course for now. There will not be a OS course examination which is why the miniexams are extra important. 
+
+I finalized some refactoring but still have not gotten around to starting all the tests and data structure stuff. 
+

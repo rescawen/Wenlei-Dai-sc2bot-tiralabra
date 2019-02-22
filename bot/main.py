@@ -20,6 +20,8 @@ from bot.structureProduction import buildSpire, buildEvochamber
 from bot.queenManagement import injecting
 from bot.upgradeManagement import continueUpgradingArmy
 
+from bot.dataStructures.priorityQueue import PriorityQueue
+
 
 class MyBot(sc2.BotAI):
     with open(Path(__file__).parent / "../botinfo.json") as f:
@@ -46,6 +48,8 @@ class MyBot(sc2.BotAI):
         self.groundUpgradeStarted = False
         self.airUpgradeStarted = False
         self.naturalBaseTag = 0
+
+        self.unitQueue = PriorityQueue()
 
     # Everything happens inside the on_step function
 
@@ -110,6 +114,10 @@ class MyBot(sc2.BotAI):
             await trainOverlordsinBatch(self, larvae)
 
         if self.time > 300:
+
+            # if resources are high prioritize making army
+            # if resources are low put in a few drones
+
             await trainMutalisks(self, larvae)
             await trainZerglings(self, larvae)
             await self.midGamePush()
@@ -200,7 +208,8 @@ class MyBot(sc2.BotAI):
         actions = []
         
         if larvae.exists and self.can_afford(DRONE) and (self.units(DRONE).amount + self.already_pending(DRONE)) < self.workerCap:
-            actions.append(larvae.random.train(DRONE))
+            self.unitQueue.enqueue(DRONE)
+            actions.append(larvae.random.train(self.unitQueue.dequeue()))
 
         if self.units(DRONE).amount > 29:
             if self.can_afford(EXTRACTOR):

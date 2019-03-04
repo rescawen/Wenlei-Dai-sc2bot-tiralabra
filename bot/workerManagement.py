@@ -1,8 +1,8 @@
 import sc2
 from sc2.constants import *
 
-async def returnWorkerstoMine(self):
-        actions = []
+async def returnWorkerstoMine(self, actions):
+    
         for idle_worker in self.workers.idle:
             mf = self.state.mineral_field.closest_to(idle_worker)
             actions.append(idle_worker.gather(mf))

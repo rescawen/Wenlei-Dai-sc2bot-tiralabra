@@ -2,9 +2,12 @@ import sc2
 from sc2.constants import *
 
 async def scouting(self, unit, enemy_natural, own_natural):
+
+    actions = []
     
     # if self.overlord_scout_order_count == 1:
-    #         await self.do(unit.move(enemy_natural))
+    #         actions.append(unit.move(enemy_natural))
+
     if self.overlord_scout_order_count == 1:
         positions = []
         for expansion in self.expansion_locations:
@@ -13,7 +16,7 @@ async def scouting(self, unit, enemy_natural, own_natural):
             if expansion.distance_to(self.start_location) < 50 or expansion.distance_to(own_natural) < 50:
                 positions.append(expansion)
         for position in positions:
-            await self.do(unit.move(position, True))
+            actions.append(unit.move(position, True))
     
     if self.overlord_scout_order_count == 2:
         positions = []
@@ -23,10 +26,10 @@ async def scouting(self, unit, enemy_natural, own_natural):
             if expansion.distance_to(self.start_location) < 60 or expansion.distance_to(own_natural) < 60:
                 positions.append(expansion)
         for position in positions:
-            await self.do(unit.move(position, True))
+            actions.append(unit.move(position, True))
 
     if self.overlord_scout_order_count == 3:
-            await self.do(unit.move(own_natural))
+            actions.append(unit.move(own_natural))
     
     if self.overlord_scout_order_count == 4:
         positions = []
@@ -36,4 +39,6 @@ async def scouting(self, unit, enemy_natural, own_natural):
             if expansion.distance_to(self.start_location) < 70 or expansion.distance_to(own_natural) < 70:
                 positions.append(expansion)
         for position in positions:
-            await self.do(unit.move(position, True))
+            actions.append(unit.move(position, True))
+            
+    await self.do_actions(actions)

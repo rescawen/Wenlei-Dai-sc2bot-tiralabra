@@ -3,17 +3,17 @@ import random
 import sc2
 from sc2.constants import *
 
-async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount):
+async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount, actions):
 
         if self.drone_counter_prior < 2:
             if self.can_afford(DRONE) and larvae.exists:
                 self.drone_counter_prior += 1
-                await self.do(larvae.random.train(DRONE))
+                actions.append(larvae.random.train(DRONE))
         
         if self.drone_counter_after < 5:
             if self.can_afford(DRONE) and larvae.exists:
                 self.drone_counter_prior += 1
-                await self.do(larvae.random.train(DRONE))
+                actions.append(larvae.random.train(DRONE))
 
         if self.minerals > 300 and totalBaseCount < 2:
             await self.expand_now()
@@ -28,7 +28,7 @@ async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount):
                         pos = hatchery.position.to2.towards(self.game_info.map_center, d)
                         if await self.can_place(SPAWNINGPOOL, pos):
                             drone = self.workers.closest_to(pos)
-                            err = await self.do(drone.build(SPAWNINGPOOL, pos))
+                            err = actions.append(drone.build(SPAWNINGPOOL, pos))
                             if not err:
                                 self.spawning_pool_started = True
                                 break
@@ -37,7 +37,7 @@ async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount):
                 if self.can_afford(EXTRACTOR):
                     drone = self.workers.random
                     target = self.state.vespene_geyser.closest_to(drone.position)
-                    err = await self.do(drone.build(EXTRACTOR, target))
+                    err = actions.append(drone.build(EXTRACTOR, target))
                     if not err:
                         self.extractor_started = True
         
@@ -45,13 +45,15 @@ async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount):
             self.moved_workers_to_gas = True
             extractor = self.units(EXTRACTOR).first
             for drone in self.workers.random_group_of(3):
-                await self.do(drone.gather(extractor))
+                actions.append(drone.gather(extractor))
 
         if self.vespene >= 112:
             sp = self.units(SPAWNINGPOOL).ready
             if sp.exists and self.minerals >= 100 and not self.mboost_started:
-                await self.do(sp.first(RESEARCH_ZERGLINGMETABOLICBOOST))
+                actions.append(sp.first(RESEARCH_ZERGLINGMETABOLICBOOST))
                 self.mboost_started = True
+
+        await self.do_actions(actions)
 
 async def pressureOpenerBuild(self, larvae, hatchery, extractor):
         if self.drone_counter_prior < 1:

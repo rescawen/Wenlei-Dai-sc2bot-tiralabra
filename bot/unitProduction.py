@@ -8,22 +8,30 @@ from sc2.constants import *
     # Theoretically you might want a little more than the bare minimum because sometimes they die in battle in later stages 
     # of the game and it is not good to be supply blocked. 
 
-async def trainOverlords(self, larvae):
+async def trainOverlords(self, larvae, actions):
         if self.supply_left < 2 and not self.already_pending(OVERLORD):
             if self.can_afford(OVERLORD) and larvae.exists:
-                await self.do(larvae.random.train(OVERLORD))
+                actions.append(larvae.random.train(OVERLORD))
 
-async def trainOverlordsinBatch(self, larvae):
+        await self.do_actions(actions)
+
+async def trainOverlordsinBatch(self, larvae, actions):
 
     if self.units(OVERLORD).amount < 23 and self.supply_left < 12 and self.already_pending(OVERLORD) < 3:
         if self.can_afford(OVERLORD) and larvae.exists:
-            await self.do(larvae.random.train(OVERLORD))
+            actions.append(larvae.random.train(OVERLORD))
     
-async def trainZerglings(self, larvae):
+    await self.do_actions(actions)
+    
+async def trainZerglings(self, larvae, actions):
     if self.units(SPAWNINGPOOL).ready.exists and self.mboost_started == True:
         if larvae.exists and self.can_afford(ZERGLING):
-            await self.do(larvae.random.train(ZERGLING))
+            actions.append(larvae.random.train(ZERGLING))
+    
+    await self.do_actions(actions)
 
-async def trainMutalisks(self, larvae):
+async def trainMutalisks(self, larvae, actions):
     if larvae.exists and self.can_afford(MUTALISK):
-            await self.do(larvae.random.train(MUTALISK))
+            actions.append(larvae.random.train(MUTALISK))
+    
+    await self.do_actions(actions)

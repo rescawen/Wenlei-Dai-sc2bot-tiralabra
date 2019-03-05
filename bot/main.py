@@ -231,3 +231,12 @@ class MyBot(sc2.BotAI):
                     actions.append(mainBase.build(LAIR))
 
         await self.do_actions(actions)
+
+    async def produceUnitsFromQueue(self, larvae, actions, unitQueue: PriorityQueue):
+
+        for unit in unitQueue:
+            print(unit)
+            print(unitQueue.dequeue())
+            actions.append(larvae.random.train(unitQueue.dequeue()))
+
+        await self.do_actions(actions)

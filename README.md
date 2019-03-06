@@ -7,6 +7,9 @@ Ohjelmointi Kieli: Python.
 ## Dokumentaatio
 
 #### [Vaatimusmäärittely](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Vaatimusm%C3%A4%C3%A4rittely.md)
+#### [Toteutusdokumentti](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Toteutusdokumentti.md)
+#### [Testausdokumentti](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Testausdokumentti.md)
+#### [Käyttöohje](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/K%C3%A4ytt%C3%B6ohje.md)
 
 ### Viikkoraportit
 

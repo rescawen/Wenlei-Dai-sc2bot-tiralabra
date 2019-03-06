@@ -30,5 +30,5 @@ Note: for development you will need Python version 3.6 or higher. There might be
 1. Follow the installation instructions for StarCraft II, StartCraft II maps, and `python-sc2` from [python-sc2](https://github.com/Dentosal/python-sc2/blob/master/README.md)
     * The Starcraft II game is free to play! Just follow the instructions above to get started.
 2. Clone this repository
-3. Remember to make sure to have the [Maps folder in sc2 game installation directory.](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(24).png) (All of this is covered in the video and in the link in the 1st step) 
+3. Move the Maps folder in this repository to the following location, it should not be in there as default after freshly installing the game. The end result should be [Maps folder in sc2 game installation directory.](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(24).png) (All of this is covered in the video and in the link in the 1st step) 
 4. Run the bot: `python3 run_locally.py`

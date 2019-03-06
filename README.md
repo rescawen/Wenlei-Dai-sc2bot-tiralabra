@@ -31,6 +31,6 @@ Note: for development you will need Python version 3.6 or higher. There might be
     * The Starcraft II game is free to play! Just follow the instructions above to get started.
 2. Clone this repository
 3. Move the Maps folder in this repository to the following location, it should not be in there as default after freshly installing the game. The end result should be [Maps folder in sc2 game installation directory.](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(24).png) (All of this is covered in the video and in the link in the 1st step) 
-4. Run the bot: `python3 run_locally.py` (note that the map name when running the game this file has to be exactly the same as the one in the folder)
+4. Run the bot: `python3 run_locally.py` (note that the map name when running the game this file has to be exactly the same as the one in the Maps folder)
 ![screenshot](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(25).png)
 [link to the file](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/run_locally.py#L18)

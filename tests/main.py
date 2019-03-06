@@ -5,11 +5,19 @@ from directoryParser import parsingReplays
 
 init()
 
-directoryA = "./replays/testA/"
-directoryB = "./replays/testB/"
+def main():
+        
+        directoryA = "./replays/testA/"
+        directoryB = "./replays/testB/"
 
-resultListA = parsingReplays(directoryA)
-resultListB = parsingReplays(directoryB)
+        resultListA = parsingReplays(directoryA)
+        resultListB = parsingReplays(directoryB)
 
-for resultStringA, resultStringB in zip(resultListA, resultListB):
-        print(resultStringA, resultStringB)
+        for resultStringA, resultStringB in zip(resultListA, resultListB):
+                print(resultStringA, resultStringB)
+        
+
+if __name__ == '__main__':
+    main()
+
+

@@ -19,26 +19,16 @@ Ohjelmointi Kieli: Python.
 
 ### Asentaminen
 
-Seuraava osa on kopioitu [Overmind Challenge Virallinen GitLab](https://gitlab.com/overmind-challenge/overmind-challenge-template)
-
 The video in the following link has a comprehensive guide to installing everything on your computer:
 
 [Python Programming: Python AI in StarCraft II tutorial part 1](https://pythonprogramming.net/starcraft-ii-ai-python-sc2-tutorial/)
 
-## Gearing up for the battle
+The following has been copied partially from [Overmind Challenge Virallinen GitLab](https://gitlab.com/overmind-challenge/overmind-challenge-template)
 
-Note: for development you will need Python version 3.6 or higher.
+Note: for development you will need Python version 3.6 or higher. There might be problems with python version mismatch, I have used Python 3.6.6 for the development.
 
 1. Follow the installation instructions for StarCraft II, StartCraft II maps, and `python-sc2` from [python-sc2](https://github.com/Dentosal/python-sc2/blob/master/README.md)
     * The Starcraft II game is free to play! Just follow the instructions above to get started.
-2. Change the name and race of your bot to `botinfo.json`
-3. Fix all FIXME items in `bot/main.py`
+2. Clone this repository
+3. Remember to make sure to have the Maps folder in sc2 game installation directory. (All of this is covered in the video and in the link in the 1st step)
 4. Run the bot: `python3 run_locally.py`
-5. Push your code to Gitlab to start fighting your opponents. You'll see the results on your Team Dashboard (link in email)
-7. Win the competition!
-
-```
-cd Python/PythonXX/Scripts/
-pip3 install --user --upgrade sc2
-
-```

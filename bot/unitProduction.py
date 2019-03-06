@@ -10,28 +10,18 @@ from sc2.constants import *
 
 async def trainOverlords(self, larvae, actions):
         if self.supply_left < 2 and not self.already_pending(OVERLORD):
-            if self.can_afford(OVERLORD) and larvae.exists:
-                actions.append(larvae.random.train(OVERLORD))
-
-        await self.do_actions(actions)
+            self.unitQueue.enqueue(OVERLORD)
 
 async def trainOverlordsinBatch(self, larvae, actions):
 
     if self.units(OVERLORD).amount < 23 and self.supply_left < 12 and self.already_pending(OVERLORD) < 3:
-        if self.can_afford(OVERLORD) and larvae.exists:
-            actions.append(larvae.random.train(OVERLORD))
-    
-    await self.do_actions(actions)
+        self.unitQueue.enqueue(OVERLORD)
+            
     
 async def trainZerglings(self, larvae, actions):
     if self.units(SPAWNINGPOOL).ready.exists and self.mboost_started == True:
-        if larvae.exists and self.can_afford(ZERGLING):
-            actions.append(larvae.random.train(ZERGLING))
-    
-    await self.do_actions(actions)
+        self.unitQueue.enqueue(ZERGLING)
 
 async def trainMutalisks(self, larvae, actions):
-    if larvae.exists and self.can_afford(MUTALISK):
-            actions.append(larvae.random.train(MUTALISK))
+    self.unitQueue.enqueue(MUTALISK)
     
-    await self.do_actions(actions)

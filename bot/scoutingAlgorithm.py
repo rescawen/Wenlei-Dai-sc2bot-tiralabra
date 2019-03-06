@@ -2,9 +2,8 @@ import sc2
 from sc2.constants import *
 
 async def scouting(self, unit, enemy_natural, own_natural):
-
     actions = []
-    
+
     # if self.overlord_scout_order_count == 1:
     #         actions.append(unit.move(enemy_natural))
 

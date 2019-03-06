@@ -5,12 +5,14 @@ class PriorityQueue():
     def __str__(self):
         return self.queue.__str__()
 
-    # def __iter__(self):
-    #     for priority in self.queue:
-    #         yield priority[0]
+    def __iter__(self):
+        while True:
+            if len(self.queue) == 0:
+                break
+            yield self.queue[0]
     
     def isEmpty(self):
-        return len(self.queue) == []
+        return len(self.queue) == 0
 
     def enqueue(self, unit_id):
         self.queue.insert(len(self.queue), unit_id)
@@ -18,15 +20,15 @@ class PriorityQueue():
     def dequeue(self):
         return self.queue.pop(0)
 
-    def delete(self, unit_id):
-        for idx, unit in enumerate(self.queue):
-            if unit == unit_id:
-                del self.queue[idx]
+    # def delete(self, unit_id):
+    #     for idx, unit in enumerate(self.queue):
+    #         if unit == unit_id:
+    #             del self.queue[idx]
     
-    def reprioritize(self, unit_id, newPriority):
-        self.delete(unit_id)
-        # if newpriority is smaller than current queue then put
-        # it in the middle, if not put it in the end
+    # def reprioritize(self, unit_id, newPriority):
+    #     self.delete(unit_id)
+    #     if newpriority is smaller than current queue then put
+    #     it in the middle, if not put it in the end
     
 
 # q = PriorityQueue()
@@ -40,6 +42,15 @@ class PriorityQueue():
 # q.enqueue(unit1)
 # q.enqueue(unit2)
 # q.enqueue(unit3)
+# q.enqueue(unit4)
+
+# print(q.isEmpty())
+
+# for unit in q:
+#     print(q.dequeue())
+#     print(q)
+
+# print(q.isEmpty())
 
 # for idx, val in enumerate(q.queue):
 #     print(idx, val)

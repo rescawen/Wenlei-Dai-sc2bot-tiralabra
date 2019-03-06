@@ -8,6 +8,8 @@ Run the bot: `python3 run_locally.py`
 
 How do different features work
 
+playing human vs bot, bot vs bot, changing openers in my code by commenting and uncommenting.
+
 What kind of input does the program support
 
 There is no input to the bot once the game is running. All the "input" is technically the code, which gives the instructions to the bot. However you can play against the bot by yourself. 

@@ -25,4 +25,3 @@ async def trainZerglings(self, actions):
 async def trainMutalisks(self, actions):
     if self.units(SPIRE).ready.exists:
         self.unitQueue.enqueue(MUTALISK)
-    

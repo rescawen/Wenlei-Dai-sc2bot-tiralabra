@@ -81,7 +81,7 @@ async def pressureOpenerBuild(self, larvae, hatchery, extractor, actions):
 
     elif not self.queeen_started and self.units(SPAWNINGPOOL).ready.exists:
         if self.can_afford(QUEEN):
-            r = actions.append(hatchery.train(QUEEN))
+            r = await self.do(hatchery.train(QUEEN))
             if not r:
                 self.queeen_started = True
     

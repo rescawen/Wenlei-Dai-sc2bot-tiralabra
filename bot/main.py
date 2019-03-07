@@ -75,7 +75,7 @@ class MyBot(sc2.BotAI):
         await returnWorkerstoMine(self, actions)
         await workerDistribution(self, totalBaseCount)
 
-        # await self.speedFinishedPush()
+        #await self.speedFinishedPush(actions)
 
         # if self.evoChamberStarted == False:
         #     await buildEvochamber(self, totalBaseCount)
@@ -88,21 +88,19 @@ class MyBot(sc2.BotAI):
 
         # pressureOpenerBuild
 
-        # if self.enemy_race == Race.Zerg or Race.Protoss or Race.Terran: just a reminder of how to pick opener based on opponents race
+        # if self.time < 180:
+        #     await pressureOpenerBuild(self, larvae, hatchery, extractor, actions)
+        #     await trainZerglings(self, actions)
+        #     await self.earlyGameBattle(actions)
 
-        #     if self.time < 180:
-        #         await self.pressureOpenerBuild(larvae, hatchery, extractor)
-        #         await self.trainZerglings(larvae)
-        #         await self.earlyGameBattle()
-    
-        #     if self.time > 180:
-        #         await self.midGameMacro(larvae, hatchery)
+        # if self.time > 180:
+        #     await self.midGameMacro(hatchery, actions)
 
-        #     if self.time > 400:
-        #         await self.trainMutalisks(larvae)
-        #         await self.trainZerglings(larvae)
-        #         await self.trainOverlordsinBatch(larvae)
-        #         await self.midGamePush()
+        # if self.time > 400:
+        #     await trainMutalisks(self, actions)
+        #     await trainZerglings(self, actions)
+        #     await trainOverlordsinBatch(self, actions)
+        #     await self.midGamePush(actions)
 
         # economyOpenerBuild 
         
@@ -110,16 +108,12 @@ class MyBot(sc2.BotAI):
             await economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount, actions)
 
         if self.time > 185:
-            await self.midGameMacro(larvae, hatchery, actions)
-            await trainOverlordsinBatch(self, larvae, actions)
-            
+            await self.midGameMacro(hatchery, actions)
+            await trainOverlordsinBatch(self, actions)
                 
         if self.time > 300:
-
-            # if resources are high prioritize making army
-            # if resources are low put in a few drones
-            await trainMutalisks(self, larvae, actions)
-            await trainZerglings(self, larvae, actions)
+            await trainMutalisks(self, actions)
+            await trainZerglings(self, actions)
             await self.midGamePush(actions)
         
         
@@ -135,21 +129,24 @@ class MyBot(sc2.BotAI):
     # When a new base is created we calculate the theoretical maximum number of workers we want to have in each of the bases
     
     async def on_building_construction_complete(self, unit:Unit):
+        
         actions = []
 
         hatchery1 = self.units.find_by_tag(self.mainBaseTag)
         hatchery2 = self.units.find_by_tag(self.naturalBaseTag)
 
         if unit.type_id == SPAWNINGPOOL:
+            #for each hatchery in macro opener train queen
             if self.can_afford(QUEEN) and hatchery1.noqueue and self.already_pending(QUEEN) < 3:
-                actions.append(hatchery1.train(QUEEN))
-            # for each hatchery in macro opener train queen
+                await self.do(hatchery1.train(QUEEN))
             if self.can_afford(QUEEN) and hatchery2.noqueue and self.already_pending(QUEEN) < 3:
-                actions.append(hatchery2.train(QUEEN))
+                print('AAAAAAAAAAAAAAAAAAAAAAA')
+                await self.do(hatchery2.train(QUEEN))
                 self.naturalBaseTag = 1
 
         if unit.type_id == HATCHERY:
             if self.mainBaseTag != 0 and self.naturalBaseTag != 1:
+                print('AAAAAAAAAAAAAAAAAAAAA')
                 self.naturalBaseTag = unit.tag
             if self.can_afford(QUEEN):
                 actions.append(unit.train(QUEEN))
@@ -173,10 +170,12 @@ class MyBot(sc2.BotAI):
         
         await self.do_actions(actions)
 
-    async def speedFinishedPush(self, actions): #refactor this
+    async def speedFinishedPush(self, actions):
         if self.units(ZERGLING).amount > 16: 
             for zl in self.units(ZERGLING).idle:
-                await self.do(zl.attack(find_target(self, self.state)))
+                actions.append(zl.attack(find_target(self, self.state)))
+        
+        await self.do_actions(actions)
     
     # wait for units to pull up before before sending them in, this current thing is good in early game vs proxy rax for example but in later stage it will send units in 1 by 1
     
@@ -205,7 +204,7 @@ class MyBot(sc2.BotAI):
                 actions.append(unit.attack(find_target(self, self.state)))
             await self.do_actions(actions)    
 
-    async def midGameMacro(self, larvae, hatchery, actions):
+    async def midGameMacro(self, hatchery, actions):
         if (self.units(DRONE).amount + self.already_pending(DRONE)) < self.workerCap:
             self.unitQueue.enqueue(DRONE)
 

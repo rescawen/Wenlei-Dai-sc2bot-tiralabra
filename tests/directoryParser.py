@@ -10,10 +10,9 @@ def parsingReplays(filepath):
     resultList = []
 
     for file in listdir(filepath):
-
         totalgames += 1
         result = extractResult(filepath+file)
-        
+
         if result[1] == True:
                 wingames += 1
                 mybotresult = colored('victory', 'green')

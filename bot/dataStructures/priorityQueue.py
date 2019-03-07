@@ -11,8 +11,8 @@ class PriorityQueue():
                 break
             yield self.queue[0]
     
-    def isEmpty(self):
-        return len(self.queue) == 0
+    # def isEmpty(self):
+    #     return len(self.queue) == 0
 
     def enqueue(self, unit_id):
         self.queue.insert(len(self.queue), unit_id)

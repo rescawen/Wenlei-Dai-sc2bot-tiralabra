@@ -1,5 +1,10 @@
 # Testing document
 
+#### Dependency installations and running the test file
+
+Because I am not using any package managers, you must download the dependacies required for testing. One is necessary for extraction of
+replay data and another is for printing things beautifully in the command line. 
+
 #### What has been tested and how
 
 Due to the nature of the project, I have opted out of unit testing. It is a bit of a shame, but when programming this kind of bot one usually runs the game everytime a potentially crashing change is made. This way once I ran into an error I could identify it easily and fix it. 
@@ -13,6 +18,8 @@ For presenting the final test results I have used the replays of the latest vers
 I have divided the test results by replay cataloging each folder with different difficulties of default bots. 
 
 
-#### Rmpirical testing results
+#### Empirical testing results
+
+Insert screenshot here later.
 
 #### Runnable test program How can the tests be repeated

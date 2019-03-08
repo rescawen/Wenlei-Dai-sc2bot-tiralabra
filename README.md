@@ -40,3 +40,8 @@ Note: for development you will need Python version 3.6 or higher. There might be
 1. Run the bot: `python3 run_locally.py` (note that the map name when running the game this file has to be exactly the same as the one in the Maps folder)
 ![screenshot](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(25).png)
 [link to the file](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/run_locally.py#L18)
+
+### Testaus
+
+See testing document to see instructions for potential installation. Run the tests:
+`/tests/main.py`

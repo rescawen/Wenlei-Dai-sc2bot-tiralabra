@@ -78,7 +78,7 @@ class MyBot(sc2.BotAI):
         if self.time < 150:
             await earlyGameDefense(self, actions)
 
-        # PRESSURE OPENER BUILD comment and uncomment the until L#102 if economy opener is active 
+        # PRESSURE OPENER BUILD comment and uncomment the until L#101 if economy opener is active 
         # if self.time < 180:
         #     await pressureOpenerBuild(self, larvae, hatchery, actions)
         #     await trainZerglings(self, actions)
@@ -100,7 +100,7 @@ class MyBot(sc2.BotAI):
         #     await trainOverlordsinBatch(self, actions)
         #     await mutaLingPush(self, actions)
 
-        # ECONOMY OPENER BUILD comment and uncomment the until L#116 if pressure opener is active 
+        # ECONOMY OPENER BUILD comment and uncomment the until L#120 if pressure opener is active 
         if self.time < 185:
             await economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions)
 
@@ -118,7 +118,6 @@ class MyBot(sc2.BotAI):
             await trainMutalisks(self, actions)
             await trainZerglings(self, actions)
             await mutaLingPush(self, actions)
-        
         
     # Scouting for overlords in initial state of the game is only required do once, hence it is executed immediately when the unit is created
     async def on_unit_created(self, unit:Unit):

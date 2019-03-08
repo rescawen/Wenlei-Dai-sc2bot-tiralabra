@@ -19,8 +19,8 @@ def main():
         Bot(race, MyBot()),
         # Human(Race.Terran)
         # Bot(Race.Terran, ProxyRaxBot())
-        Computer(Race.Zerg, Difficulty.VeryHard)
-    ], realtime=False, step_time_limit=2.0, game_time_limit=(60*20), save_replay_as="./replays/MyBot_EconomyOpener/Zerg_Elite/{bot1}_vs_{bot2}_{map}_{time}.SC2Replay".format(bot1="MyBot_Economy", bot2="ZergElite", map="DreamcatcherLE".replace(" ", ""), time=time.strftime("%H_%M_%j")))
+        Computer(Race.Terran, Difficulty.VeryHard)
+    ], realtime=False, step_time_limit=2.0, game_time_limit=(60*20), save_replay_as="./replays/{bot1}_vs_{bot2}_{map}_{time}.SC2Replay".format(bot1="MyBot", bot2="TerranElite", map="DreamcatcherLE".replace(" ", ""), time=time.strftime("%H_%M_%j")))
 
 if __name__ == '__main__':
     main()

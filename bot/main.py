@@ -13,7 +13,7 @@ from bot.earlyGameBuildOrder import economyOpenerBuild, pressureOpenerBuild
 from bot.midGameBuildOrder import midGameMacro
 from bot.scoutingAlgorithm import scouting
 from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
-from bot.battleAlgorithm import find_target, earlyGameDefense, earlyGameBattle, speedFinishedPush, midGamePush
+from bot.battleAlgorithm import find_target, earlyGameDefense, earlyGameBattle, speedFinishedPush, mutaLingPush
 from bot.workerManagement import workerDistribution, returnWorkerstoMine
 from bot.unitProduction import trainOverlords, trainOverlordsinBatch, trainMutalisks, trainZerglings
 from bot.expansionManagement import naturalExpand, thirdExpand, lategameExpand
@@ -60,36 +60,30 @@ class MyBot(sc2.BotAI):
         if iteration == 1:
             self.mainBaseTag = self.townhalls.first.tag 
         
-        hatchery = self.townhalls.first #fix this from crashing the game
+        hatchery = self.townhalls.first #game crashes if starting base dies.
         larvae = self.units(LARVA)
-        extractor = self.units(EXTRACTOR).ready
         totalBaseCount = self.townhalls.amount
 
         await self.produceUnitsFromQueue(larvae, actions, self.unitQueue)
-
+        await returnWorkerstoMine(self, actions)
+        await workerDistribution(self, totalBaseCount)
         await injecting(self, hatchery, actions)
         await trainOverlords(self, larvae, actions)
-        await naturalExpand(self, totalBaseCount)
+        await naturalExpand(self, totalBaseCount) 
         await thirdExpand(self, totalBaseCount)
         await lategameExpand(self, totalBaseCount)
         await continueUpgradingArmy(self, actions)
-        await returnWorkerstoMine(self, actions)
-        await workerDistribution(self, totalBaseCount)
-
+    
         if self.evoChamberStarted == False:
             await buildEvochamber(self, totalBaseCount)
-
-        if self.spireStarted == False:
-            await buildSpire(self)
 
         # Defending against a very specific early game all in in the bot tournament, versus default bots useless.
         if self.time < 150:
             await earlyGameDefense(self, actions)
 
         # PRESSURE OPENER BUILD comment and uncomment the until L#102 if economy opener is active 
-
         if self.time < 180:
-            await pressureOpenerBuild(self, larvae, hatchery, extractor, actions)
+            await pressureOpenerBuild(self, larvae, hatchery, actions)
             await trainZerglings(self, actions)
             await earlyGameBattle(self, actions)
             await speedFinishedPush(self, actions)
@@ -97,16 +91,18 @@ class MyBot(sc2.BotAI):
         if self.time > 180:
             await midGameMacro(self, hatchery, actions)
 
+        if self.time > 360 and self.spireStarted == False: #### do this in economy as well
+            await buildSpire(self)
+
         if self.time > 400:
             await trainMutalisks(self, actions)
             await trainZerglings(self, actions)
             await trainOverlordsinBatch(self, actions)
-            await midGamePush(self, actions)
+            await mutaLingPush(self, actions)
 
         # ECONOMY OPENER BUILD comment and uncomment the until L#116 if pressure opener is active 
-        
         # if self.time < 185:
-        #     await economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount, actions)
+        #     await economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions)
 
         # if self.time > 185:
         #     await midGameMacro(self, hatchery, actions)
@@ -115,7 +111,7 @@ class MyBot(sc2.BotAI):
         # if self.time > 300:
         #     await trainMutalisks(self, actions)
         #     await trainZerglings(self, actions)
-        #     await midGamePush(self, actions)
+        #     await mutaLingPush(self, actions)
         
         
     # Scouting for overlords in initial state of the game is only required do once, hence it is executed immediately when the unit is created
@@ -127,24 +123,23 @@ class MyBot(sc2.BotAI):
             self.overlord_scout_order_count += 1
             await scouting(self, unit, enemy_natural, own_natural)
 
-    # When a new base is created we calculate the theoretical maximum number of workers we want to have in each of the bases
-    
     async def on_building_construction_complete(self, unit:Unit):
-        
+
         actions = []
 
-        hatchery1 = self.units.find_by_tag(self.mainBaseTag)
-        hatchery2 = self.units.find_by_tag(self.naturalBaseTag)
-
         if unit.type_id == SPAWNINGPOOL:
-            #for each hatchery in macro opener train queen
+            # Sometimes spawning pool might finish after the hatcheries, in our case the economy opener has this situation.
+            # Most of the time there is always resources to build the queens once they do............. continue
+            hatchery1 = self.units.find_by_tag(self.mainBaseTag)
+            hatchery2 = self.units.find_by_tag(self.naturalBaseTag)
             if self.can_afford(QUEEN) and hatchery1.noqueue and self.already_pending(QUEEN) < 3:
                 await self.do(hatchery1.train(QUEEN))
             if self.can_afford(QUEEN) and hatchery2.noqueue and self.already_pending(QUEEN) < 3:
                 await self.do(hatchery2.train(QUEEN))
                 self.naturalBaseTag = 1
-
+        
         if unit.type_id == HATCHERY:
+        # When a new base is created we calculate the theoretical maximum number of workers we want to have in each of the bases
             if self.mainBaseTag != 0 and self.naturalBaseTag != 1:
                 self.naturalBaseTag = unit.tag
             if self.can_afford(QUEEN):
@@ -155,6 +150,8 @@ class MyBot(sc2.BotAI):
             else:
                 self.workerCap = 66
         
+        # The following two if statements just check if one can start upgrading the upgrades these
+        # buildings offer immediately once they complete
         if unit.type_id == EVOLUTIONCHAMBER:
             evochamber = self.units(EVOLUTIONCHAMBER).ready
             if self.can_afford(RESEARCH_ZERGMELEEWEAPONSLEVEL1):

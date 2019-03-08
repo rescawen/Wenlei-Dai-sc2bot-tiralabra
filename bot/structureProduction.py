@@ -1,6 +1,8 @@
 import sc2
 from sc2.constants import *
 
+# Due to the nature of async, is there not a smarter way to build tech buildings? 
+
 async def buildSpire(self):
     mainBase = self.units(LAIR).ready
     if mainBase.exists:

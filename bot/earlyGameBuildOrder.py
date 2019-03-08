@@ -3,7 +3,7 @@ import random
 import sc2
 from sc2.constants import *
 
-async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount, actions):
+async def economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions):
     if self.drone_counter_prior < 2:
         if self.can_afford(DRONE) and larvae.exists:
             self.drone_counter_prior += 1
@@ -54,7 +54,7 @@ async def economyOpenerBuild(self, larvae, hatchery, extractor, totalBaseCount, 
 
     await self.do_actions(actions)
 
-async def pressureOpenerBuild(self, larvae, hatchery, extractor, actions):
+async def pressureOpenerBuild(self, larvae, hatchery, actions):
     if self.drone_counter_prior < 1:
         if self.can_afford(DRONE):
             self.drone_counter_prior += 1
@@ -85,7 +85,7 @@ async def pressureOpenerBuild(self, larvae, hatchery, extractor, actions):
             if not r:
                 self.queeen_started = True
     
-    if self.drone_counter_after < 3 and extractor.exists:
+    if self.drone_counter_after < 3 and self.units(EXTRACTOR).ready.exists:
         if self.can_afford(DRONE):
             self.drone_counter_after += 1
             actions.append(larvae.random.train(DRONE))

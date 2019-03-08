@@ -31,7 +31,7 @@ I opted out of testing pressure opener, because if I keep producing mass zerglin
 
 There are a total of 30 replays uploaded to the final submit. 
 
-![screenshot of the above](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(31).png)
+![screenshot of the above](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(32).png)
 
 Apparently sometimes opponents scout worker can bug out my build order resulting in a few losses in all 3 matchups and the reason why my versus Protoss was not 100%. There were some fundamental mistakes against Terran where a lot of games MyBot could have won but continously did a lot of unwise decisions to result in losses. Finally in the mirror matchup against Zerg, I simply played too greedy against many of the rushes that came my way. 
 

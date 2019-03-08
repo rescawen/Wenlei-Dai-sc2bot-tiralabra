@@ -20,3 +20,10 @@ A framework for build orders would be really great. Right now they are all very 
 The only data structure used in this is the simple priority queue based on the list. Enqueuing and dequeuing should both take O(1) since I am using the index of a list as the priority of the queue. There are so many cool things that one potentially do with queues. 
 
 Reprioritization is key to giving the bot reactionary instructions. For example mineral/gas ratio thing..
+
+Sources: https://pythonprogramming.net/starcraft-ii-ai-python-sc2-tutorial/
+
+Big thanks to https://github.com/Dentosal, https://github.com/Blodir and spudde for giving advice which were key to writing a lot of the lines of the code. 
+
+
+

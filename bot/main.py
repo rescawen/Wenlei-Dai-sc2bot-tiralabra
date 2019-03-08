@@ -38,8 +38,8 @@ class MyBot(sc2.BotAI):
         self.moved_workers_from_gas = 0
         self.queeen_started = False
         self.mboost_started = False
-        self.overlord_scout_order_count = 0
-        self.workerCap = 24
+        self.overlord_scout_order_count = 0 # Depending on which 
+        self.workerCap = 24 #Worker count depends on how many bases one has and should be capped because too many would be inefficient
         self.thirdBaseStarted = False
         self.lairStarted = False
         self.spireStarted = False
@@ -73,49 +73,54 @@ class MyBot(sc2.BotAI):
         await thirdExpand(self, totalBaseCount)
         await lategameExpand(self, totalBaseCount)
         await continueUpgradingArmy(self, actions)
-    
-        if self.evoChamberStarted == False:
-            await buildEvochamber(self, totalBaseCount)
 
         # Defending against a very specific early game all in in the bot tournament, versus default bots useless.
         if self.time < 150:
             await earlyGameDefense(self, actions)
 
         # PRESSURE OPENER BUILD comment and uncomment the until L#102 if economy opener is active 
-        if self.time < 180:
-            await pressureOpenerBuild(self, larvae, hatchery, actions)
-            await trainZerglings(self, actions)
-            await earlyGameBattle(self, actions)
-            await speedFinishedPush(self, actions)
+        # if self.time < 180:
+        #     await pressureOpenerBuild(self, larvae, hatchery, actions)
+        #     await trainZerglings(self, actions)
+        #     await earlyGameBattle(self, actions)
+        #     await speedFinishedPush(self, actions)
 
-        if self.time > 180:
-            await midGameMacro(self, hatchery, actions)
-
-        if self.time > 360 and self.spireStarted == False: #### do this in economy as well
-            await buildSpire(self)
-
-        if self.time > 400:
-            await trainMutalisks(self, actions)
-            await trainZerglings(self, actions)
-            await trainOverlordsinBatch(self, actions)
-            await mutaLingPush(self, actions)
-
-        # ECONOMY OPENER BUILD comment and uncomment the until L#116 if pressure opener is active 
-        # if self.time < 185:
-        #     await economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions)
-
-        # if self.time > 185:
+        # if self.time > 180:
         #     await midGameMacro(self, hatchery, actions)
-        #     await trainOverlordsinBatch(self, actions)
-                
-        # if self.time > 300:
+
+        # if self.time > 320: 
+        #     if self.evoChamberStarted == False:
+        #         await buildEvochamber(self, totalBaseCount)
+        #     if self.spireStarted == False: #### do this in economy as well
+        #         await buildSpire(self)
+
+        # if self.time > 400:
         #     await trainMutalisks(self, actions)
         #     await trainZerglings(self, actions)
+        #     await trainOverlordsinBatch(self, actions)
         #     await mutaLingPush(self, actions)
+
+        # ECONOMY OPENER BUILD comment and uncomment the until L#116 if pressure opener is active 
+        if self.time < 185:
+            await economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions)
+
+        if self.time > 185:
+            await midGameMacro(self, hatchery, actions)
+            await trainOverlordsinBatch(self, actions)
+
+        if self.time > 250: 
+            if self.evoChamberStarted == False:
+                await buildEvochamber(self, totalBaseCount)
+            if self.spireStarted == False: #### do this in economy as well
+                await buildSpire(self)
+                
+        if self.time > 300:
+            await trainMutalisks(self, actions)
+            await trainZerglings(self, actions)
+            await mutaLingPush(self, actions)
         
         
     # Scouting for overlords in initial state of the game is only required do once, hence it is executed immediately when the unit is created
-
     async def on_unit_created(self, unit:Unit):
         enemy_natural = calculate_enemy_natural(self)
         own_natural = calculate_own_natural(self)
@@ -124,9 +129,7 @@ class MyBot(sc2.BotAI):
             await scouting(self, unit, enemy_natural, own_natural)
 
     async def on_building_construction_complete(self, unit:Unit):
-
         actions = []
-
         if unit.type_id == SPAWNINGPOOL:
             # Sometimes spawning pool might finish after the hatcheries, in our case the economy opener has this situation.
             # Most of the time there is always resources to build the queens once they do............. continue

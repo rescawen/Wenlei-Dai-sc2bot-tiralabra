@@ -37,4 +37,4 @@ Apparently sometimes opponents scout worker can bug out my build order resulting
 
 #### Runnable test program How can the tests be repeated
 
-The main.py from tests folder is the program that one runs. However from command line it instantly runs and quits. So it doesn't run the result. Using visual studio code this was not a not a problem.
+The main.py from tests folder is the program that one runs. However from command line it instantly runs and quits. So one doesn't have time to see the result. Using visual studio code this was not a not a problem.

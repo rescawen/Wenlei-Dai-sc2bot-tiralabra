@@ -1,7 +1,8 @@
 import sc2
 from sc2.constants import *
 
-# Due to the nature of async, is there not a smarter way to build tech buildings? 
+# These are technically part of the midGameBuildOrder but we don't want them to happen too early.
+# That is why they are separate and are built once the economy is fully going.
 
 async def buildSpire(self):
     mainBase = self.units(LAIR).ready
@@ -16,7 +17,6 @@ async def buildEvochamber(self, totalBaseCount):
         mainBase = self.units(LAIR).ready
     else:
         mainBase = self.units(HATCHERY).ready
-    # sometimes mainBase is lair and sometimes hatchery causing things to break
     if totalBaseCount > 2:
         if not (self.units(EVOLUTIONCHAMBER).exists or self.already_pending(EVOLUTIONCHAMBER)):
             if self.can_afford(EVOLUTIONCHAMBER):

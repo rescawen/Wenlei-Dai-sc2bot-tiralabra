@@ -1,6 +1,8 @@
 import json
 from mpyq import MPQArchive
 
+
+
 def extractResult(filepath):
     archive = MPQArchive(str(filepath))
     files = archive.extract()

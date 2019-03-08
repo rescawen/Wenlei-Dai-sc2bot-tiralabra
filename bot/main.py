@@ -11,7 +11,7 @@ from sc2.unit import Unit
 
 from bot.earlyGameBuildOrder import economyOpenerBuild, pressureOpenerBuild
 from bot.midGameBuildOrder import midGameMacro
-from bot.scoutingAlgorithm import scouting
+from bot.scoutingAlgorithm import calculate_enemy_natural, calculate_own_natural, scouting
 from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
 from bot.battleAlgorithm import find_target, earlyGameDefense, earlyGameBattle, speedFinishedPush, mutaLingPush
 from bot.workerManagement import workerDistribution, returnWorkerstoMine
@@ -38,7 +38,7 @@ class MyBot(sc2.BotAI):
         self.moved_workers_from_gas = 0
         self.queeen_started = False
         self.mboost_started = False
-        self.overlord_scout_order_count = 0 # Depending on which 
+        self.overlord_scout_order_count = 0 
         self.workerCap = 24 #Worker count depends on how many bases one has and should be capped because too many would be inefficient
         self.thirdBaseStarted = False
         self.lairStarted = False
@@ -167,6 +167,13 @@ class MyBot(sc2.BotAI):
                 self.airUpgradeStarted = True
         
         await self.do_actions(actions)
+
+    # The queue at this stage just allows for a more object oriented way of producing units. Where we don't
+    # need to check if larvae exists for every different type of unit in unitProduction. Instead we simply put
+    # the ID of the unit into the queue and take it out here and then produce it. 
+
+    # This is more effective for units that have to created continously rather than units that have to created 
+    # immediately.
 
     async def produceUnitsFromQueue(self, larvae, actions, unitQueue: PriorityQueue):
         for unit in unitQueue:

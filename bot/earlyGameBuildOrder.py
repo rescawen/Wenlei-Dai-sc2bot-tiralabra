@@ -3,7 +3,12 @@ import random
 import sc2
 from sc2.constants import *
 
+# In RTS build order is the sequence in which one builds workers, houses for supply(overlord in this case)
+# and other tech structures. Usually these instructions should be as precise and efficient as possible to
+# get the most amount of units out. 
+
 async def economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions):
+    # We double expand to get 3 hatcheries immediately and then just drone up and tech up as fast possible
     if self.drone_counter_prior < 2:
         if self.can_afford(DRONE) and larvae.exists:
             self.drone_counter_prior += 1
@@ -55,6 +60,8 @@ async def economyOpenerBuild(self, larvae, hatchery, totalBaseCount, actions):
     await self.do_actions(actions)
 
 async def pressureOpenerBuild(self, larvae, hatchery, actions):
+    # Everything revolves around getting a the combination of zergling speed and the most amount of zerglings,
+    # when the speed finishes for an attack
     if self.drone_counter_prior < 1:
         if self.can_afford(DRONE):
             self.drone_counter_prior += 1

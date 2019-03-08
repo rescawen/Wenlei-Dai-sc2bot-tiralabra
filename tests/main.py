@@ -5,6 +5,8 @@ from directoryParser import parsingReplays
 
 init()
 
+# not managing packages with pip so might have to install dependecies manually
+
 def main():
         directoryA = "./replays/testA/"
         directoryB = "./replays/testB/"

@@ -3,6 +3,9 @@ from termcolor import colored
 
 from extractionFunction import extractResult
 
+# Going through each replay and creating string with the results of the game which is added into a list.
+# For each directory we return a list. 
+
 def parsingReplays(filepath):
 
     totalgames = 0

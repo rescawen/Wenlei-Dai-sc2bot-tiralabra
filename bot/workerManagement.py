@@ -13,7 +13,8 @@ async def returnWorkerstoMine(self, actions):
 
 async def workerDistribution(self, totalBaseCount):
     # This distribute workers seems very trivial, so the reason why do not distribute workers
-    # from the start of the game is that it would mess up the earlyGameBuildOrders.
+    # from the start of the game is that it would mess up the earlyGameBuildOrders because we don't
+    # want to mine more gas which we don't need.
 
     if totalBaseCount > 1:
         await self.distribute_workers()

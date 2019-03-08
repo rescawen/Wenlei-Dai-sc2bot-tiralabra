@@ -19,15 +19,18 @@ Due to the nature of the project, I have opted out of unit testing. It is a bit 
 
 To some extent one can call running the game and looking for problems when things are happening in real time or going through the replays manually exploratory testing. This was done a lot.
 
-The main and only testing is done on the replay files that are generated after every game is run. Through out this project I have generated a total of X replays. 
+The main and only testing is done on the replay files that are generated after every game is run. Through out this project I have generated a total of around 500 replays. 
 
 For presenting the final test results I have used the replays of the latest version of the bot and latest patch in the actual of sc2. 
 
-I have divided the test results by replay cataloging each folder with different difficulties of default bots. 
-
+I have divided the test results by replay cataloging by opening strategy and race of default elite/veryhard bots. This is the hardest bot that does not cheat. Also the default bots even within the same difficulty have different strategies so it simulates wider range of playstyle. 
 
 #### Empirical testing results
+
+There are a total of X replays uploaded to the final submit. 
 
 Insert screenshot here later.
 
 #### Runnable test program How can the tests be repeated
+
+The main.py from tests folder is the program that one runs. However from command line it instantly runs and quits. So it doesn't run the result. Using visual studio code was not a not a problem.

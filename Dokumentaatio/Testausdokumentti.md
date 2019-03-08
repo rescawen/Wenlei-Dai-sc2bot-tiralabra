@@ -2,8 +2,16 @@
 
 #### Dependency installations and running the test file
 
-Because I am not using any package managers, you must download the dependacies required for testing. One is necessary for extraction of
-replay data and another is for printing things beautifully in the command line. 
+Because I am not using any package managers, you might need to download the dependacies required for testing. One is necessary for extraction of replay data and another 2 are for printing things in color in the command line.
+
+The first one is (mpyq)[https://github.com/eagleflo/mpyq] so simply:
+`pip install mpyq`
+
+The second one is (termcolor)[https://pypi.org/project/termcolor/] so simply:
+`pip install termcolor`
+
+The third one is (colorama)[https://pypi.org/project/colorama/] so simply:
+`pip install colorama`
 
 #### What has been tested and how
 

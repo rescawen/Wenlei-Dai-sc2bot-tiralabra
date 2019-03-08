@@ -6,7 +6,7 @@ from extractionFunction import extractResult
 # Going through each replay and creating string with the results of the game which is added into a list.
 # For each directory we return a list. 
 
-def parsingReplays(filepath):
+def parsingReplays(filepath, opponentName):
 
     totalgames = 0
     wingames = 0
@@ -27,7 +27,7 @@ def parsingReplays(filepath):
         else:
                 defaultbotresult = colored('defeat', 'red')
         
-        resultList.append("MyBot:" + mybotresult + ", Terran Easy:" + defaultbotresult + "|")
+        resultList.append("MyBot:" + mybotresult + ", " + opponentName + ":" + defaultbotresult + "|")
         
     resultList.append('Win Ratio:' + '{:.1%}'.format(wingames/totalgames) + '                  |')
 

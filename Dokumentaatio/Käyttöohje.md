@@ -9,7 +9,7 @@ Run the bot: `python3 run_locally.py`
 #### Features
 
 My bot supports 2 different early game openers and a unified gameplan after the openers. Simply comment and uncomment the following sections for [pressure](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/bot/main.py#L82) and [economy](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/bot/main.py#L104) opener. 
-![screenshot of the above](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(30).png =1080x1920)
+[Link with screenshot](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(30).png)
 
 There are three different ways the bot can interact with opponents. 
 

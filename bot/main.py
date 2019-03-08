@@ -12,7 +12,6 @@ from sc2.unit import Unit
 from bot.earlyGameBuildOrder import economyOpenerBuild, pressureOpenerBuild
 from bot.midGameBuildOrder import midGameMacro
 from bot.scoutingAlgorithm import calculate_enemy_natural, calculate_own_natural, scouting
-from bot.locationCalculation import calculate_enemy_natural, calculate_own_natural
 from bot.battleAlgorithm import find_target, earlyGameDefense, earlyGameBattle, speedFinishedPush, mutaLingPush
 from bot.workerManagement import workerDistribution, returnWorkerstoMine
 from bot.unitProduction import trainOverlords, trainOverlordsinBatch, trainMutalisks, trainZerglings
@@ -64,6 +63,7 @@ class MyBot(sc2.BotAI):
         larvae = self.units(LARVA)
         totalBaseCount = self.townhalls.amount
 
+        # This list of functions we want to continuously keep doing or check to do
         await self.produceUnitsFromQueue(larvae, actions, self.unitQueue)
         await returnWorkerstoMine(self, actions)
         await workerDistribution(self, totalBaseCount)

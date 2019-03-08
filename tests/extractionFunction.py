@@ -1,7 +1,10 @@
 import json
 from mpyq import MPQArchive
 
+# HUOM. This core of this function and the use of mpyq was provided by dentosal. Reaktor used the same
+# extraction method from replays to manage their ladder for this bot tournament.
 
+# This function takes the specific file path of the replay and extracts all kinds of cool data from it.
 
 def extractResult(filepath):
     archive = MPQArchive(str(filepath))

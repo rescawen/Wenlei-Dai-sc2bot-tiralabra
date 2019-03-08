@@ -8,9 +8,8 @@ Run the bot: `python3 run_locally.py`
 
 #### Features
 
-My bot supports 2 different early game openers and a unified gameplan after the openers. Simply comment and uncomment section below in the 
-
-
+My bot supports 2 different early game openers and a unified gameplan after the openers. Simply comment and uncomment the following sections for [pressure](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/bot/main.pyL#82) and [economy](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/bot/main.pyL#104) opener. 
+![screenshot of the above](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(30).png)
 
 There are three different ways the bot can interact with opponents. 
 
@@ -18,7 +17,8 @@ There are three different ways the bot can interact with opponents.
 2. Playing against default built in example bots given by python-sc2 library.
 3. Playing against you the human!
 
-One can set all of this in run_locally file by changing the opponents part in the run function by commenting and uncommenting this section
+One can set all of this in run_locally file by commenting and uncommenting the [opponents part](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/run_locally.pyL#22) in the run_game function. 
+![screen of the above](https://github.com/rescawen/Wenlei-Dai-sc2bot-tiralabra/blob/master/Dokumentaatio/Screenshots/Screenshot%20(29).png)
 
 #### What kind of input does the program support
 

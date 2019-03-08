@@ -25,6 +25,8 @@ For presenting the final test results I have used the replays of the latest vers
 
 I have divided the test results by replay cataloging by opening strategy and race of default elite/veryhard bots. This is the hardest bot that does not cheat. Also the default bots even within the same difficulty have different strategies so it simulates wider range of playstyle. 
 
+I opted out of testing pressure opener, because if I keep producing mass zergling behind it simply beats all default AIs except cheat insane regardless of the race. Also I ran out of time in the end. 
+
 #### Empirical testing results
 
 There are a total of X replays uploaded to the final submit. 
@@ -33,4 +35,4 @@ Insert screenshot here later.
 
 #### Runnable test program How can the tests be repeated
 
-The main.py from tests folder is the program that one runs. However from command line it instantly runs and quits. So it doesn't run the result. Using visual studio code was not a not a problem.
+The main.py from tests folder is the program that one runs. However from command line it instantly runs and quits. So it doesn't run the result. Using visual studio code this was not a not a problem.

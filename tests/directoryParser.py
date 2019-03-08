@@ -19,16 +19,18 @@ def parsingReplays(filepath, opponentName):
         if result[1] == True:
                 wingames += 1
                 mybotresult = colored('victory', 'green')
-        else:
-                mybotresult = colored('defeat ', 'red')
-
-        if result[2] == True: 
-                defaultbotresult = colored('victory', 'green')
-        else:
                 defaultbotresult = colored('defeat', 'red')
+        else:
+                mybotresult = colored('defeat', 'red')
+                defaultbotresult = colored('victory', 'green')
+
+        # if result[2] == True: 
+        #         defaultbotresult = colored('victory', 'green')
+        # else:
+        #         defaultbotresult = colored('defeat', 'red')
         
         resultList.append("MyBot:" + mybotresult + ", " + opponentName + ":" + defaultbotresult + "|")
         
-    resultList.append('Win Ratio:' + '{:.1%}'.format(wingames/totalgames) + '                  |')
+    resultList.append('Win Ratio:' + '{:.1%}'.format(wingames/totalgames) + '                     ')
 
     return resultList

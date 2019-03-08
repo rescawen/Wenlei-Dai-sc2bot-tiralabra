@@ -26,7 +26,7 @@ Reprioritization is key to giving the bot reactionary instructions. For example 
 
 https://pythonprogramming.net/starcraft-ii-ai-python-sc2-tutorial/
 
-Big thanks to https://github.com/Dentosal, https://github.com/Blodir and spudde for giving advice which were key to writing a lot of the lines of the code. 
+Big thanks to [Dentosal](https://github.com/Dentosal) who is the main developer for the python-sc2 library and [Blodir](https://github.com/Blodir) who is champion of the artificial overmind challenge. 
 
 
 
